@@ -59,3 +59,4 @@ A powerful discord bot for your server! Hyped Bot V4.0
 * `weather-js - ^2.0.0` 
 
 © HypedGroupCode - [Site](https://www.hypeds.com/)# Hyped-V4.0
+# Hyped-V4.0
