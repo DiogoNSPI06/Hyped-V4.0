@@ -69,6 +69,15 @@ client.once('ready', () => {
 
 //🔧| Executing Commands
 client.on('interactionCreate', async int => {
+  //🔧 -> MultiColor
+  let colors = JSON.parse(fs.readFileSync("./database/colors.json", "utf8"));
+  if(!colors[int.guild.id]) {
+    colors[int.guild.id] = {
+      color: config.def.color
+    }
+  }
+  let color = colors[int.guild.id].color;
+
   if(!int.isCommand()) return;
 
   const command = client.commands.get(int.commandName);
@@ -76,7 +85,7 @@ client.on('interactionCreate', async int => {
   if(!command) return;
 
   try {
-    await command.execute(int);
+    await command.execute(int, client, color, config);
   } catch (error) {
     if(error) console.error(error);
     await int.reply({ content: ':x: | Não consegui executar este comando!', ephemeral: true })
