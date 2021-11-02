@@ -4,7 +4,7 @@ module.exports = {
   data: new SlashCommandBuilder()
   .setName('ping')
   .setDescription('Envia o Ping do Bot'),
-  async execute(i) {
-    await i.reply('Pong!')
+  async execute(int) {
+    int.reply({ content: 'Pong' })
   },
 };

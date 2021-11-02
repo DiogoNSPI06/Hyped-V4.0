@@ -43,13 +43,17 @@ const slashCommandsFiles = fs.readdirSync('./commands/slash/').filter(file => fi
 for (const file of slashCommandsFiles) {
   const sCommand = require(`./commands/slash/${file}`);
   slashCommands.push(sCommand.data.toJSON());
+  client.commands.set(sCommand.data.name, sCommand);
 }
 
-const rest = new REST({ version: '9' }).setToken(TOKEN);
+client.once('ready', () => {
+  console.log('✅| Client is Ready!')
 
-(async () => {
-	try {
-		console.log('⚠️ | Refreshing slash (/) commands.');
+  const rest = new REST({ version: '9' }).setToken(TOKEN);
+  
+  (async () => {
+	 try {
+		 console.log('⚠️ | Refreshing slash (/) commands.');
 
 		await rest.put(
 			Routes.applicationCommands(config.client.id),
@@ -57,10 +61,11 @@ const rest = new REST({ version: '9' }).setToken(TOKEN);
 		);
 
 		console.log('✅| Successfully reloaded application (/) commands.');
-	} catch (error) {
+	 } catch (error) {
 		console.error(error);
 	}
-})();
+  })();
+})
 
 //🔧| Executing Commands
 client.on('interactionCreate', async int => {
@@ -77,6 +82,7 @@ client.on('interactionCreate', async int => {
     await int.reply({ content: ':x: | Não consegui executar este comando!', ephemeral: true })
   }
 })
+
 
 //⚒️| Message Commands
 client.on('messageCreate', async msg => {
