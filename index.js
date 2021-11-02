@@ -202,7 +202,7 @@ let messageapagada = new Discord.MessageEmbed()
 channel.send({ embeds: [messageapagada] });
 });
 
-//Level-System
+//✅》Level-System
 client.on('messageCreate', message => {
   if(message.author.bot) return; 
   if(message.channel.type === "dm") return;
@@ -241,7 +241,7 @@ client.on('guildMemberRemove', (member, guild) => {
   channelwl.send({ embeds: [awelcomeembed] })
 })
 
-//Invite Blocker
+//✅》Invite Blocker
 client.on("messageCreate", async message => {
   const regex =  /(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li|club)|discordapp\.com\/invite|discord\.com\/invite)\/.+[a-z]/gi;
   
@@ -294,7 +294,7 @@ client.on("ready", () => {
 console.log("✅| My Second Rich Presence Is Online!")
 });
 
-//Console Físico
+//✅》Console Físico
 client.on("ready", () => {
   /*
   var content = "Está tudo Ok";
@@ -307,7 +307,7 @@ client.on("ready", () => {
   console.log("✅| Its all OK");
 })
 
-//Porta express
+//✅》Porta do express
 app.get("/", (request, response) => {
   const ping = new Date();
   response.send(`<html><head><style>
