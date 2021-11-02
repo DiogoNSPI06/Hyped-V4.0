@@ -1,0 +1,31 @@
+{
+  "def": {
+    "prefix": "&",
+    "color": "#008ddc"
+  },
+  "URL": {
+    "website": "https://www.hypeds.com/hypedbot",
+    "statusPage": "https://stats.uptimerobot.com/1BnoXi6Mgp",
+    "addBot": "https://www.hypeds.com/addbot"
+  },
+  "client": {
+    "version": "BETA v4.0.0",
+    "id": "785650764562432031",
+    "name": "H Y P E D",
+    "add": "https://www.hypeds.com/addbot",
+    "owner": {
+      "name": "! Diogo06🐾#1337",
+      "id": "732549418829611098"
+    }
+  },
+  "owner": {
+    "name": "! Diogo06🐾#1337",
+    "id": "732549418829611098",
+    "color": "#ce3700"
+  },
+  "per": {
+    "adm": "ADMINISTRATOR",
+    "mod": "BAN_MEMBERS",
+    "manager": "MANAGER_GUILD"
+  }
+}
