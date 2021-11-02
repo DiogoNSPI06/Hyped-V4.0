@@ -28,7 +28,7 @@ A powerful discord bot for your server! Hyped Bot V4.0
   "owner": {
     "name": "<NOME DO CRIADOR DO BOT>",
     "id": "<ID DO CRIADOR DO BOT>",
-    "color": "<COR DO CRIADOR DO BOT>(opcional)"
+    "color": "<COR DE PERFIL DO CRIADOR DO BOT>(opcional)"
   },
   "per": {
     "adm": "ADMINISTRATOR",
@@ -58,4 +58,4 @@ A powerful discord bot for your server! Hyped Bot V4.0
 * `superagent - ^6.1.0`
 * `weather-js - ^2.0.0` 
 
-© HypedGroupCode - [Site](https://www.hypeds.com/)
+© HypedGroupCode - [Site](https://www.hypeds.com/)# Hyped-V4.0
