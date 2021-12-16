@@ -35,7 +35,7 @@ A powerful discord bot for your server! Hyped Bot V4.0
     "manager": "MANAGER_GUILD"
   }
 }
-
+```
 * 📌 Crie um `.env` e insira seu TOKEN seguindo o exemplo:
 
 ```css

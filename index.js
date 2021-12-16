@@ -127,14 +127,6 @@ client.on('messageCreate', async msg => {
   }
   if(!message.content.toLowerCase().startsWith(prefix)) return;
 
-  //✅ -> Error Message
-  const embederror = new Discord.MessageEmbed()
-    .setTitle(":x: | Erro! ")
-    .setDescription("-> Não Achei Esse Comando!")
-    .setTimestamp()
-    .setColor('RED')
-    .setFooter("© HypedGroupCode");
-  
   //🔧 -> Args & Command
   const args = message.content
    .trim().slice(prefix.length)
@@ -154,6 +146,14 @@ client.on('messageCreate', async msg => {
   if(command === "send") command = "chat"
   if(command === "pontos") command = "points"
   if(command === "xp") command = "points"
+
+  //✅ -> Error Message
+  const embederror = new Discord.MessageEmbed()
+  .setTitle(":x: | Erro! ")
+  .setDescription(`> Não achei o comando: \`${command}\``)
+  .setTimestamp()
+  .setColor('RED')
+  .setFooter("© HypedGroupCode");
 
   try {
     const commandFile = require(`./commands/prefix/${command}.js`)
