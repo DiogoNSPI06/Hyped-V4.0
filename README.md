@@ -1,8 +1,7 @@
-## Hyped-v4.0
+## Hyped-v4.0-ALPHA
 A powerful discord bot for your server! Hyped Bot V4.0
 
 * ⚙️ Ferramentas - Siga os passos abaixo para iniciar o bot
- * 🌟 Insira o TOKEN em um .env seguindo o exemplo
  * 📌 Crie um arquivo `config.json` seguindo as seguintes especificações:
  ```json 
  {
@@ -36,28 +35,27 @@ A powerful discord bot for your server! Hyped Bot V4.0
     "manager": "MANAGER_GUILD"
   }
 }
+
+* 📌 Crie um `.env` e insira seu TOKEN seguindo o exemplo:
+
+```css
+TOKEN=<SEU TOKEN AQUI>
+PORT=1337
+
+```
  * 🌠 Inicie com `node index.js`
 
 **Requirements**
 
 * Node.js
-* `beautify - 0.0.8`
-* `canvas - ^2.8.0`
-* `caxinha - ^0.2.62`
-* `discord-buttons - ^4.0.0`
-* `discord-canvas - ^1.4.1`
+* `@discordjs/builders - ^0.6.0`
+* `@discordjs/rest - ^0.1.0-canary.0`
+* `discord-api-types - ^0.23.1`
 * `discord.js - ^13.1.0`
 * `express - ^4.17.1`
 * `jimp - ^0.16.1`
 * `moment - ^2.29.1`
-* `ms - ^2.1.3`
-* `number-to-words - ^1.2.4`
-* `parse-ms ^2.1.0`
+* `mongoose - ^6.0.10`
 * `quick.db - ^7.1.3`
-* `random-reddit - ^2.0.1`
-* `superagent - ^6.1.0`
-* `weather-js - ^2.0.0` 
 
-© HypedGroupCode - [Site](https://www.hypeds.com/)# Hyped-V4.0
-# Hyped-V4.0
-# Hyped-V4.0
+© HypedGroupCode - [Site](https://www.hypeds.com/)
