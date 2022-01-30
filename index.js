@@ -1,5 +1,6 @@
 //⚙️| Packages
 const express = require('express');
+const puppeteer = require('puppeteer');
 const localDB = require('quick.db');
 const mongoDB = require('mongoose');
 const moment = require('moment');
@@ -35,6 +36,10 @@ client.aliases = new Discord.Collection();
 const botconfig = config;
 const app = express();
 moment()
+
+/* Debug */
+
+client.on('debug', console.log)
 
 //🔧| Registering slash commands
 const slashCommands = [];
@@ -119,9 +124,6 @@ client.on('messageCreate', async msg => {
   if(msg.channel.type == "dm") return;
   if(msg.author.bot) return;
 
-  if(msg.content.startsWith("@everyone")) msg.react('<:ping:798182774292086824>')
-  if(msg.content.startsWith("@here")) msg.react('<:ping:798182774292086824>')
-
   if(msg.content.startsWith(`<@!${client.user.id}>`||`@${client.username}`)) {
     message.reply(`Olá, tudo bem? Quer Saber Mais Sobre Mim?  Use \`${prefix}help\` e veja meus comandos!`)
   }
@@ -132,6 +134,21 @@ client.on('messageCreate', async msg => {
    .trim().slice(prefix.length)
    .split(/ +/g);
   let command = args.shift().toLowerCase();
+
+  //🔧 -> Botmode
+  let botmode = localDB.get(`botmode_${msg.guild.id}`)
+
+  if(botmode === "nsfw" && command === "yiff") {
+    const nsfwCommands = require(`./commands/prefix/nsfw/yiff.js`)
+    nsfwCommands.run(client, message, args, prefix, color, config)
+  }
+
+  if(botmode === "tosco") {
+    if(msg.content.startsWith("@everyone")) msg.react('<:ping:798182774292086824>')
+    if(msg.content.startsWith("@here")) msg.react('<:ping:798182774292086824>')
+
+    if(msg.content.startsWith("kkkkk")) msg.react('😆')
+  }
 
   //🔧 -> Aliases
   if(command === "warn") command = "aviso"
@@ -146,6 +163,8 @@ client.on('messageCreate', async msg => {
   if(command === "send") command = "chat"
   if(command === "pontos") command = "points"
   if(command === "xp") command = "points"
+  if(command === "servermode") command = "setservermode"
+  if(command === "hornyjail") command = "jail"
 
   //✅ -> Error Message
   const embederror = new Discord.MessageEmbed()
@@ -155,8 +174,18 @@ client.on('messageCreate', async msg => {
   .setColor('RED')
   .setFooter("© HypedGroupCode");
 
+  const embedManutenção = new Discord.MessageEmbed()
+  .setTitle(`⚒️ | Manutenção em Andamento!`)
+  .setDescription(`> **Porcentagem Completa:** __100%__ \`▉▉▉▉▉▉▉▉▉▉\``)
+  .addField(`> <a:BP_alerta_gif:753036518964330531> | Status da Host:`, '[Clique Aqui!](https://stats.uptimerobot.com/1BnoXi6Mgp/790084368)', true)
+  .addField(`
+  <:BP_github:766277909803171872> | Github`, `[Clique Aqui!](https://github.com/DiogoNSPI06/Hyped-V4.0)`, true)
+  .addField(`> Dúvidas?`, ` Contate-me [aqui!](https://discord.com/users/732549418829611098)`)
+  .setColor(color)
+  .setFooter(config.footer.owner);
+
   try {
-    const commandFile = require(`./commands/prefix/${command}.js`)
+    const commandFile = require(`./commands/prefix/normal/${command}.js`)
     commandFile.run(client, message, args, prefix, color, config);
     console.log(`${message.guild.name}: ${message.author.tag} Usou ${command} no #${message.channel.name}`)
   } catch (err) {
@@ -169,7 +198,7 @@ client.on('messageCreate', async msg => {
 
 //Mensagem Atualizada
 client.on('messageUpdate', async (oldMessage, newMessage) => {
-  let channelID = localDB.get(`${oldMessage.guild.id}_channeldemsg`)
+  let channelID = localDB.get(`LogsChannel_${oldMessage.guild.id}`)
   if (!channelID) return
   let channel = oldMessage.guild.channels.cache.get(channelID)
   if (!channel) return
@@ -193,7 +222,7 @@ if (oldMessage.author.bot) return;
 //Mensagem apagada
 client.on('messageDelete', async (message) => {
 
-  let channelID = localDB.get(`${message.guild.id}_channeldemsg`)
+  let channelID = localDB.get(`LogsChannel_${message.guild.id}`)
   if (!channelID) return
   let channel = message.guild.channels.cache.get(channelID)
   if (!channel) return
@@ -254,7 +283,7 @@ client.on('guildMemberRemove', (member, guild) => {
 client.on("messageCreate", async message => {
   const regex =  /(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li|club)|discordapp\.com\/invite|discord\.com\/invite)\/.+[a-z]/gi;
   
-  let inviteblockid = localDB.get(`${message.guild.id}_inviteblock`)
+  let inviteblockid = localDB.get(`InviteBlocker_${message.guild.id}`)
 
   if(!inviteblockid) return;
   
@@ -274,14 +303,14 @@ client.on("ready", () => {
   let activities = [
       `📣 - Utilize ${config.def.prefix}help`,
       `${client.guilds.cache.size} servidores! 😎`,
-      `⚒️ - Slash Commands em BETA`,
+      `⚒️ - Slash commands em Desenvolvimento!`,
       `${client.users.cache.size} usuários! 😎`
     ],
     i = 0;
   setInterval( () => client.user.setActivity(`${activities[i++ % activities.length]}`, {
         //type: "WATCHING",
         type: "STREAMING", url: "https://twitch.tv/diogo06221"
-      }), 1200 * 60); 
+      }), 3500 * 60); 
   client.user
       .setStatus("online")
 console.log("✅| My Rich Presence Is Online!")
@@ -289,15 +318,16 @@ console.log("✅| My Rich Presence Is Online!")
 
 client.on("ready", () => {
   let activities = [
+    //`⚒️ - EM MANUTENÇÃO`
       `📣 - Utilize ${config.def.prefix}help`,
       `${client.guilds.cache.size} servidores! 😎`,
-      `⚒️ - Slash Commands em BETA`,
+      `⚒️ - Slash commands em Desenvolvimento!`,
       `${client.users.cache.size} usuários! 😎`
     ],
     i = 0;
   setInterval( () => client.user.setActivity(`${activities[i++ % activities.length]}`, {
         type: "WATCHING",
-      }), 1000 * 60); 
+      }), 5000 * 60); 
   client.user
       .setStatus("online")
 console.log("✅| My Second Rich Presence Is Online!")
@@ -305,14 +335,6 @@ console.log("✅| My Second Rich Presence Is Online!")
 
 //✅》Console Físico
 client.on("ready", () => {
-  /*
-  var content = "Está tudo Ok";
-  var channel = client.guilds.cache.get("777870393137430589").channels.cache.get("777870601243197451");
-  setInterval(function() {
-    channel.send(content); 
-  }, 100 * 60 * 60 * 1); 
-  channel.send(content);
-  */
   console.log("✅| Its all OK");
 })
 
