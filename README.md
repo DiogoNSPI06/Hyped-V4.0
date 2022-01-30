@@ -12,7 +12,7 @@ A powerful discord bot for your server! Hyped Bot V4.0
   "font": "Anton.fnt",
   "API": {
     "path": "https://api.hypeds.com/",
-    "token": "Nzalyp12bnasAhmso621",
+    "token": "<SEU TOKEN DE API HYPED>",
     "version": "v1"
   },
   "URL": {
