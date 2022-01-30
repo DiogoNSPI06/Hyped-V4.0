@@ -18,7 +18,7 @@ A powerful discord bot for your server! Hyped Bot V4.0
   "URL": {
     "website": "https://www.hypeds.com/",
     "discord": "https://www.hypeds.com/discord",
-    "github": "",
+    "github": "https://github.com/DiogoNSPI06/Hyped-V4.0",
     "statusPage": "https://stats.uptimerobot.com/1BnoXi6Mgp",
     "addBot": "https://www.hypeds.com/addbot"
   },
