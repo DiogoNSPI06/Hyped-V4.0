@@ -1,8 +1,11 @@
+//⚙️| AntiCrash
+process.on("unhandledRejection", (error) => console.error(error));
+
+process.on("uncaughtException", (error) => console.error(error));
+
 //⚙️| Packages
 const express = require('express');
-const puppeteer = require('puppeteer');
 const localDB = require('quick.db');
-const mongoDB = require('mongoose');
 const moment = require('moment');
 const fs = require('fs');
 
@@ -16,12 +19,15 @@ const PORT = process.env.PORT
 
 //⚙️| Discord
 const Discord = require('discord.js');
+const { DiscordTogether } = require('discord-together');
 const { Intents } = require('discord.js');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 
-const client = new Discord.Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS] });
+const client = new Discord.Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.GUILD_VOICE_STATES] });
+
+client.discordTogether = new DiscordTogether(client);
 
 /* 
 {
@@ -75,7 +81,7 @@ client.once('ready', () => {
 //🔧| Executing Commands
 client.on('interactionCreate', async int => {
   //🔧 -> MultiColor
-  let colors = JSON.parse(fs.readFileSync("./database/colors.json", "utf8"));
+  let colors = JSON.parse(fs.readFileSync("./commands/prefix/database/colors.json", "utf8"));
   if(!colors[int.guild.id]) {
     colors[int.guild.id] = {
       color: config.def.color
@@ -102,7 +108,7 @@ client.on('interactionCreate', async int => {
 client.on('messageCreate', async msg => {
   let message = msg
   //🔧 -> MultiPrefix
-  let prefixes = JSON.parse(fs.readFileSync("./database/prefixes.json", "utf8"));
+  let prefixes = JSON.parse(fs.readFileSync("./commands/prefix/database/prefixes.json", "utf8"));
   if(msg.channel.type == 'dm') return;
   if(!prefixes[msg.guild.id]) {
     prefixes[msg.guild.id] = {
@@ -112,7 +118,7 @@ client.on('messageCreate', async msg => {
   let prefix = prefixes[msg.guild.id].prefix;
 
   //🔧 -> MultiColor
-  let colors = JSON.parse(fs.readFileSync("./database/colors.json", "utf8"));
+  let colors = JSON.parse(fs.readFileSync("./commands/prefix/database/colors.json", "utf8"));
   if(!colors[msg.guild.id]) {
     colors[msg.guild.id] = {
       color: config.def.color
@@ -143,11 +149,21 @@ client.on('messageCreate', async msg => {
     nsfwCommands.run(client, message, args, prefix, color, config)
   }
 
-  if(botmode === "tosco") {
-    if(msg.content.startsWith("@everyone")) msg.react('<:ping:798182774292086824>')
-    if(msg.content.startsWith("@here")) msg.react('<:ping:798182774292086824>')
+  const mcs = msg.content.startsWith("@everyone" || "@here" || "kkkkk"|| "kkkk")
 
-    if(msg.content.startsWith("kkkkk")) msg.react('😆')
+  if(botmode === "tosco" && mcs) {
+    msg.react('<:ping:798182774292086824>')
+    msg.react('<:ping:798182774292086824>')
+
+    msg.react('😆')
+  }
+
+  //🔧 -> BotLanguage
+  let botLang = localDB.get(`botLang_${msg.guild.id}`)
+
+  if(botLang === "english" && command === "help") {
+    const enCommands = require(`./commands/prefix/en/help.js`)
+    enCommands.run(client, message, args, prefix, color, config)
   }
 
   //🔧 -> Aliases
@@ -164,6 +180,7 @@ client.on('messageCreate', async msg => {
   if(command === "pontos") command = "points"
   if(command === "xp") command = "points"
   if(command === "servermode") command = "setservermode"
+  if(command === "setbotmode") command = "setservermode"
   if(command === "hornyjail") command = "jail"
 
   //✅ -> Error Message
@@ -300,11 +317,15 @@ client.on("messageCreate", async message => {
 
 //✅》ATIVIDADE DO BOT!
 client.on("ready", () => {
+   let count = 0; 
+   client.guilds.cache.forEach((guild) => {
+    count += guild.memberCount 
+  })
   let activities = [
       `📣 - Utilize ${config.def.prefix}help`,
       `${client.guilds.cache.size} servidores! 😎`,
       `⚒️ - Slash commands em Desenvolvimento!`,
-      `${client.users.cache.size} usuários! 😎`
+      `${count} usuários! 😎`
     ],
     i = 0;
   setInterval( () => client.user.setActivity(`${activities[i++ % activities.length]}`, {
