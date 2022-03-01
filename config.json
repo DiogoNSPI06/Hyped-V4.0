@@ -6,7 +6,7 @@
   "font": "Anton.fnt",
   "API": {
     "path": "https://api.hypeds.com/",
-    "token": "Nzalyp12bnasAhmso621",
+    "token": "<SEU TOKEN DA API HYPED>",
     "version": "v1"
   },
   "URL": {
