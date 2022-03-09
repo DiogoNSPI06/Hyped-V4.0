@@ -1,4 +1,4 @@
-## Hyped-v4.0 BETA
+## Hyped-v4.0
 A powerful discord bot for your server! Hyped Bot V4.0
 
 * ⚙️ Ferramentas - Siga os passos abaixo para iniciar o bot
