@@ -3,6 +3,8 @@ process.on("unhandledRejection", (error) => console.error(error));
 
 process.on("uncaughtException", (error) => console.error(error));
 
+//?monaco=1
+
 //⚙️| Packages
 const express = require('express');
 const localDB = require('quick.db');
@@ -21,11 +23,12 @@ const PORT = process.env.PORT
 const Discord = require('discord.js');
 const { DiscordTogether } = require('discord-together');
 const { Intents } = require('discord.js');
+const { Permissions } = require('discord.js');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 
-const client = new Discord.Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.GUILD_VOICE_STATES] });
+const client = new Discord.Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.GUILD_VOICE_STATES, Intents.FLAGS.GUILD_MEMBERS] });
 
 client.discordTogether = new DiscordTogether(client);
 
@@ -211,6 +214,33 @@ client.on('messageCreate', async msg => {
   }
 })
 
+//✅》AUTOMOD
+client.on('messageCreate', async (message) => {
+  let links = require('./links.json')
+
+  let automod = localDB.get(`automodIsEnabled_${message.guild.id}`)
+  if(!automod || automod === false) return;
+
+  if(message.member.permissions.has(Permissions.FLAGS.BAN_MEMBERS)) return;
+
+  if(message.content.includes(links.toString())) {
+    message.delete;
+
+    message.channel.send(`${message.author} | Este link foi marcado como malicioso. Por isso eu o excluí!`).then(m1 => {
+      m1.delete({ timeout: 1500 })
+    })
+  }
+
+  if(message.content.lenght > 1250) {
+    message.delete;
+
+    message.channel.send(`${message.author} | A sua mensagem, foi detectada como spam. Envia-a usando menos caractéres(< 1250)!`).then(m1 => {
+      m1.delete({ timeout: 1500 })
+    })
+  }
+}) 
+
+
 //✅》Sistema de logs
 
 //Mensagem Atualizada
@@ -221,19 +251,18 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
   if (!channel) return
 
   const embed = new Discord.MessageEmbed()
-.setColor("RANDOM")
-.setTitle(":white_check_mark: | Sistema de Logs")
-.setDescription(`**Mensagem atualizada**
-**Onde Foi**:${oldMessage.channel} 
-**Autor Da Mensagem**: ${oldMessage.author}
-**Mensagem Antiga**:  \`\`\`${oldMessage.content}\`\`\`
-**Nova Mensagem**:  \`\`\` ${newMessage.content}\`\`\`  `)
+  .setColor("RANDOM")
+  .setTitle(":white_check_mark: | Sistema de Logs")
+  .setDescription(`**Mensagem atualizada**
+  **Onde Foi**:${oldMessage.channel} 
+  **Autor Da Mensagem**: ${oldMessage.author}
+  **Mensagem Antiga**:  \`\`\`${oldMessage.content}\`\`\`
+  **Nova Mensagem**:  \`\`\` ${newMessage.content}\`\`\`  `)
 
-if (oldMessage.author.bot) return;
+  if (oldMessage.author.bot) return;
 
   
   channel.send({ embeds: [embed] });  
-  
 })
 
 //Mensagem apagada
@@ -279,6 +308,18 @@ client.on('guildMemberAdd', (member, guild) => {
   .setDescription(`Seja Bem Vindo <@${member.id}>! Divirta-se! \n \n Agora temos ${member.guild.members.cache.size} membros nesse servidor!`)
   .setColor("RANDOM")
   channelw.send({ embeds: [welcomeembed] })
+})
+
+//✅》Autorole
+client.on('guildMemberAdd', (member, guild) => {
+  console.log("✅| Adicionando o cargo!")
+  let beforerole = localDB.get(`autorole_role_${member.guild.id}`);
+  let role = member.guild.roles.cache.get(beforerole);
+
+  let autoRole = localDB.get(`autorole_isEnabled${member.guild.id}`)
+  if(!autoRole || autoRole === false) return;
+
+  member.roles.add(role)
 })
 
 //goodbye
@@ -423,7 +464,7 @@ app.get("/", (request, response) => {
 </body></html>`)
   ping.setHours(ping.getHours() -3 );
   console.log(`⚠️ | Ping recived at ${ping.getUTCHours()}:${ping.getUTCMinutes()}:${ping.getUTCSeconds()}`);
-})
+});
 app.listen(PORT)
 
 //Código de ! Diogo06🐾#1337 Não Disturbe
